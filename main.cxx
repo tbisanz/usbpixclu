@@ -137,7 +137,7 @@ std::vector<std::vector<hit>> clusterHits( std::vector<hit> const & hits ){
 					int spatDist = dX*dX+dY*dY;
 					int tempDist = dLv*dLv;
 	
-					if( spatDist <= 2 && tempDist <= 9) {
+					if( spatDist <= 8 && tempDist <= 9) {
 						newlyAdded.push_back( *candidate );	
 						clusters.back().push_back( *candidate );
 						hitPixelVec.erase( candidate );
@@ -271,19 +271,19 @@ int main() {
 	outFile.cd();
 	//outFile.SetDirectory(gDirectory);
 
-	TH1D* totClu = new TH1D("test", "test", 20, -0.5, 19.5);
-	TH1D* totClu1 = new TH1D("test1", "test1", 20, -0.5, 19.5);
-	TH1D* totClu2 = new TH1D("test2", "test2", 25, -0.5, 24.5);
-	TH1D* totClu3 = new TH1D("test3", "test3", 60, -0.5, 59.5);
-	TH1D* totClu4 = new TH1D("test4", "test4", 60, -0.5, 59.5);
+	TH1D* clusterToTHist = new TH1D("totalToT", "Total ToT for all cluster sizes;true ToT;entries", 20, -0.5, 19.5);
+	TH1D* clusterToTHist1 = new TH1D("totalToTsize1", "Total ToT for cluster with size 1;true ToT;entries", 20, -0.5, 19.5);
+	TH1D* clusterToTHist2 = new TH1D("totalToTsize2", "Total ToT for clusters with size 2;true ToT;entries", 25, -0.5, 24.5);
+	TH1D* clusterToTHist3 = new TH1D("totalToTsize3", "Total ToT for clusters with size 3;true ToT;entries", 60, -0.5, 59.5);
+	TH1D* clusterToTHist4 = new TH1D("totalToTsize4", "Total ToT for clusters with size 4 or larger;true ToT;entries", 60, -0.5, 59.5);
 	
-	TH1D* totHit = new TH1D("totHit", "totHit", 18, -0.5, 17.5);
-	TH1D* lvl1Hit = new TH1D("lvl1", "lvl1", 16, -0.5, 15.5);
+	TH1D* totHit = new TH1D("totHit", "ToT distribution for all hits (w/o clustering);true ToT;entries", 18, -0.5, 17.5);
+	TH1D* lvl1Hit = new TH1D("lvl1", "ToT distribution for all hits (w/o clustering);lvl1;entries", 16, -0.5, 15.5);
 	
-	TH1D* cluSize = new TH1D("cluSize", "cluSize", 20, -0.5, 19.5);
-	TH1D* noClu = new TH1D("noClu", "noClu", 10, -0.5, 9.5);
+	TH1D* cluSize = new TH1D("cluSize", "Cluster size;Size/pixels;entries", 20, -0.5, 19.5);
+	TH1D* noClu = new TH1D("noClu", "Number of clusters per event (=per trigger or read-out block);No of clusters;entries", 10, -0.5, 9.5);
 
-	int _pHitDiscConf = 2;
+	int _pHitDiscConf = 0;
 	size_t _pLv1ReadOut = 16;
 /*
 	std::cout << "FE-I4B Clustering Script!\nPlease configure your setup, \ndefault values are indicated in [].\nSimply pressing return confirms those\nif you don't want to change them!" << std::endl;
@@ -318,7 +318,7 @@ int main() {
 	std::string cmdDec; 
 
 	//std::ifstream infile("quellenscan.21.04_SOURCE_SCAN_5_0_0_0.raw");
-	std::ifstream infile("messung1_SOURCE_SCAN_17_0_0_0.raw");
+	std::ifstream infile("sources_SOURCE_SCAN_16.raw");
 
 	size_t DHCount = 0;
 	size_t TRCount = 0;
@@ -396,12 +396,12 @@ int main() {
 					totHit->Fill(pixel.tot);
 					lvl1Hit->Fill(pixel.lvl1);
 				}
-				totClu->Fill(tot);
+				clusterToTHist->Fill(tot);
 				cluSize->Fill(cluster.size());
-				if(cluster.size() == 1) totClu1->Fill(tot);
-				else if(cluster.size() == 2) totClu2->Fill(tot);
-				else if(cluster.size() == 3) totClu3->Fill(tot);
-				else totClu4->Fill(tot);
+				if(cluster.size() == 1) clusterToTHist1->Fill(tot);
+				else if(cluster.size() == 2) clusterToTHist2->Fill(tot);
+				else if(cluster.size() == 3) clusterToTHist3->Fill(tot);
+				else clusterToTHist4->Fill(tot);
 /*
 				if(cluster.size() == 2) {
 					std::cout << "Two hit cluster: " << std::endl;
@@ -413,25 +413,25 @@ int main() {
 	}
 	//outFile->cd();
 	auto c1 = std::unique_ptr<TCanvas>(new TCanvas());
-	totClu->Draw();	
-	c1->SaveAs("test.pdf","pdf");
-	totClu1->Draw();	
-	c1->SaveAs("test1.pdf","pdf");
-	totClu2->Draw();	
-	c1->SaveAs("test2.pdf","pdf");
-	totClu3->Draw();	
-	c1->SaveAs("test3.pdf","pdf");
-	totClu4->Draw();	
-	c1->SaveAs("test4.pdf","pdf");
+	clusterToTHist->Draw();	
+	c1->SaveAs("clusterToT.pdf","pdf");
+	clusterToTHist1->Draw();	
+	c1->SaveAs("clusterToT_size1.pdf","pdf");
+	clusterToTHist2->Draw();	
+	c1->SaveAs("clusterToT_size2.pdf","pdf");
+	clusterToTHist3->Draw();	
+	c1->SaveAs("clusterToT_size3.pdf","pdf");
+	clusterToTHist4->Draw();	
+	c1->SaveAs("clusterToT_size4orLarger.pdf","pdf");
 	totHit->Draw();	
-	c1->SaveAs("totHit.pdf","pdf");
+	c1->SaveAs("totAllHit.pdf","pdf");
 	lvl1Hit->Draw();	
-	c1->SaveAs("lvl1Hit.pdf","pdf");
+	c1->SaveAs("lvl1AllHit.pdf","pdf");
 	c1->SetLogy();
 	cluSize->Draw();	
-	c1->SaveAs("cluSize.pdf","pdf");
+	c1->SaveAs("clusterSize.pdf","pdf");
 	noClu->Draw();	
-	c1->SaveAs("noClu.pdf","pdf");
+	c1->SaveAs("numberClusters.pdf","pdf");
 
 	outFile.Write();
 	outFile.Close();
