@@ -328,17 +328,17 @@ int main() {
 
 	//We always read two lines, one correspods to the decoded word (cmdDec) and one to the
 	//raw undecoded hit, which we usually just discard
-	while (std::getline(infile, cmd) && std::getline(infile, cmdDec)){
+	while (std::getline(infile, cmdDec)) { //&& std::getline(infile, cmdDec)){
 			
 		//Sometimes there is a "CHANNEL X" in the data file, this confuses our parser and
 		//we need to correct for this, in this case the cmd is actually the second line we
 		//read and the actual cmdDec is the third. The first line - i.e. "CHANNEL X" can
 		//safely be discarded
-		if( std::equal( cmd.cbegin(), cmd.cbegin()+7, CHANNEL.begin() ) ) {
+/*		if( std::equal( cmd.cbegin(), cmd.cbegin()+7, CHANNEL.begin() ) ) {
 			cmd = cmdDec;
 			std::getline(infile, cmdDec);	
 		}
-		
+		*/
 		//The LvL1 is determined by counting the data header (DH), indicated by an entry
 		//starting with "DH". Records containing data are so called data records, they start
 		//with a "DR". In case an external trigger was provided, we also have trigger words
