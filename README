@@ -1,0 +1,1 @@
+To compile, do: g++ `root-config --cflags` main.cxx `root-config --libs` -o main
