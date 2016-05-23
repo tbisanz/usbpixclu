@@ -272,6 +272,7 @@ int main() {
 	//outFile.SetDirectory(gDirectory);
 
 	TH1D* clusterToTHist = new TH1D("totalToT", "Total ToT for all cluster sizes;true ToT;entries", 20, -0.5, 19.5);
+	TH1D* clusterQHist = new TH1D("totalQ", "Total charge for all cluster sizes;charge/e;entries", 40, 0, 50000);
 	TH1D* clusterToTHist1 = new TH1D("totalToTsize1", "Total ToT for cluster with size 1;true ToT;entries", 20, -0.5, 19.5);
 	TH1D* clusterToTHist2 = new TH1D("totalToTsize2", "Total ToT for clusters with size 2;true ToT;entries", 25, -0.5, 24.5);
 	TH1D* clusterToTHist3 = new TH1D("totalToTsize3", "Total ToT for clusters with size 3;true ToT;entries", 60, -0.5, 59.5);
@@ -404,6 +405,7 @@ int main() {
 					lvl1Hit->Fill(pixel.lvl1);
 				}
 				clusterToTHist->Fill(tot);
+				clusterQHist->Fill(qtot);
 				cluSize->Fill(cluster.size());
 				if(cluster.size() == 1) clusterToTHist1->Fill(tot);
 				else if(cluster.size() == 2) clusterToTHist2->Fill(tot);
@@ -420,6 +422,8 @@ int main() {
 	}
 	//outFile->cd();
 	auto c1 = std::unique_ptr<TCanvas>(new TCanvas());
+	clusterQHist->Draw();	
+	c1->SaveAs("clusterQ.pdf","pdf");
 	clusterToTHist->Draw();	
 	c1->SaveAs("clusterToT.pdf","pdf");
 	clusterToTHist1->Draw();	
