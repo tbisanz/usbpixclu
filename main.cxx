@@ -278,7 +278,7 @@ int main() {
 	TH1D* clusterToTHist4 = new TH1D("totalToTsize4", "Total ToT for clusters with size 4 or larger;true ToT;entries", 60, -0.5, 59.5);
 	
 	TH1D* totHit = new TH1D("totHit", "ToT distribution for all hits (w/o clustering);true ToT;entries", 18, -0.5, 17.5);
-	TH1D* lvl1Hit = new TH1D("lvl1", "ToT distribution for all hits (w/o clustering);lvl1;entries", 16, -0.5, 15.5);
+	TH1D* lvl1Hit = new TH1D("lvl1", "LvL1 distribution for all hits (w/o clustering);lvl1;entries", 16, -0.5, 15.5);
 	
 	TH1D* cluSize = new TH1D("cluSize", "Cluster size;Size/pixels;entries", 20, -0.5, 19.5);
 	TH1D* noClu = new TH1D("noClu", "Number of clusters per event (=per trigger or read-out block);No of clusters;entries", 10, -0.5, 9.5);
@@ -312,13 +312,13 @@ int main() {
 
 	std::cout << "HitDiscConf set to: " << _pHitDiscConf << std::endl;
 */	
-	hit::setDecoder("par.root");
+//	hit::setDecoder("par.root");
  	
 	std::string cmd; 
 	std::string cmdDec; 
 
 	//std::ifstream infile("quellenscan.21.04_SOURCE_SCAN_5_0_0_0.raw");
-	std::ifstream infile("sources_SOURCE_SCAN_16.raw");
+	std::ifstream infile("source3_Source_Scan40_0_0_0.raw");
 
 	size_t DHCount = 0;
 	size_t TRCount = 0;
@@ -334,11 +334,15 @@ int main() {
 		//we need to correct for this, in this case the cmd is actually the second line we
 		//read and the actual cmdDec is the third. The first line - i.e. "CHANNEL X" can
 		//safely be discarded
-/*		if( std::equal( cmd.cbegin(), cmd.cbegin()+7, CHANNEL.begin() ) ) {
-			cmd = cmdDec;
-			std::getline(infile, cmdDec);	
+		
+		if( std::equal( cmdDec.cbegin(), cmdDec.cbegin()+7, CHANNEL.begin() ) ) {
+			//cmd = cmdDec;
+			//std::getline(infile, cmdDec);	
+			if( DHCount =! 0) {
+				DHCount = _pLv1ReadOut;
+			}
 		}
-		*/
+		
 		//The LvL1 is determined by counting the data header (DH), indicated by an entry
 		//starting with "DH". Records containing data are so called data records, they start
 		//with a "DR". In case an external trigger was provided, we also have trigger words
@@ -351,12 +355,15 @@ int main() {
 			std::string word;
 			std::stringstream line(cmdDec);
 			if(line >> word >> x >> y >> tot1 >> tot2) {
-				hitVec.emplace_back(x, y, tot1, tot2, DHCount);
+				hitVec.emplace_back(x, y, tot1, tot2, DHCount-1);
 			} else {
 				//PANIC!
 			}
 		} else if( std::equal( cmdDec.cbegin(), cmdDec.cbegin()+2, TD.begin() ) ) {
 				TRCount++;
+				if(DHCount != 0) {
+					DHCount = _pLv1ReadOut;
+				}
 		}
 
 		//We always read out a fixed number of data headers - if we reach this number, we will
@@ -437,6 +444,6 @@ int main() {
 	outFile.Close();
 
 	std::cout << "Processed " << trigger << " triggers" << std::endl;
-	std::cout << "Processed " << TRCount << " triggers" << std::endl;
+	std::cout << "Processed " << TRCount << " TDs" << std::endl;
 	return 1;
 }
