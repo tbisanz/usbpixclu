@@ -271,10 +271,10 @@ int main() {
 	outFile.cd();
 	//outFile.SetDirectory(gDirectory);
 
-	TH1D* clusterToTHist = new TH1D("totalToT", "Total ToT for all cluster sizes;true ToT;entries", 20, -0.5, 19.5);
+	TH1D* clusterToTHist = new TH1D("totalToT", "Total ToT for all cluster sizes;true ToT;entries", 30, -0.5, 29.5);
 	TH1D* clusterQHist = new TH1D("totalQ", "Total charge for all cluster sizes;charge/e;entries", 40, 0, 50000);
-	TH1D* clusterToTHist1 = new TH1D("totalToTsize1", "Total ToT for cluster with size 1;true ToT;entries", 20, -0.5, 19.5);
-	TH1D* clusterToTHist2 = new TH1D("totalToTsize2", "Total ToT for clusters with size 2;true ToT;entries", 25, -0.5, 24.5);
+	TH1D* clusterToTHist1 = new TH1D("totalToTsize1", "Total ToT for cluster with size 1;true ToT;entries", 30, -0.5, 29.5);
+	TH1D* clusterToTHist2 = new TH1D("totalToTsize2", "Total ToT for clusters with size 2;true ToT;entries", 35, -0.5, 34.5);
 	TH1D* clusterToTHist3 = new TH1D("totalToTsize3", "Total ToT for clusters with size 3;true ToT;entries", 60, -0.5, 59.5);
 	TH1D* clusterToTHist4 = new TH1D("totalToTsize4", "Total ToT for clusters with size 4 or larger;true ToT;entries", 60, -0.5, 59.5);
 	
@@ -319,7 +319,7 @@ int main() {
 	std::string cmdDec; 
 
 	//std::ifstream infile("quellenscan.21.04_SOURCE_SCAN_5_0_0_0.raw");
-	std::ifstream infile("source3_Source_Scan40_0_0_0.raw");
+	std::ifstream infile("source3_Source_Scan50_0_0_0.raw");
 
 	size_t DHCount = 0;
 	size_t TRCount = 0;
@@ -372,6 +372,7 @@ int main() {
 		if(DHCount == _pLv1ReadOut) {
 			DHCount = 0;
 			trigger++;
+			if(trigger%250000 == 0) std::cout << "Processed " << trigger << " triggers" << std::endl;
 
 			std::vector<hit> decodedHits;
 			switch(_pHitDiscConf) {
