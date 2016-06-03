@@ -33,7 +33,7 @@ class totDecoder {
 		//The calibration parameters are stored in a ROOT file
 		TFile f(filename.c_str());
 
-		TH1F* ParA = (TH1F*)f.Get("ParA_00");
+		TH1F* ParA = (TH1F*)f.Get("ParA_000");
 		TH1F* ParB = (TH1F*)f.Get("ParB_00");
 		TH1F* ParC = (TH1F*)f.Get("ParC_00");
 	
