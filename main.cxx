@@ -266,7 +266,12 @@ int main(int argc, char* argv[]) {
 	const std::string TD = "TD";
 	const std::string CHANNEL = "CHANNEL";
 
-	std::string outFileName = "out.root";
+	std::string inFilename = std::string(argv[1]);
+	
+	std::string suffix = inFilename;
+	suffix.resize(suffix.size()-4);
+
+	std::string outFileName = "out_"+suffix+".root";
 	TFile outFile(outFileName.c_str(), "RECREATE");
 	outFile.cd();
 	//outFile.SetDirectory(gDirectory);
@@ -318,10 +323,7 @@ int main(int argc, char* argv[]) {
 	std::string cmd; 
 	std::string cmdDec; 
 	
-	std::string inFilename = std::string(argv[1]);
 
-	std::cout << inFilename << std::endl; 
-	//std::ifstream infile("quellenscan.21.04_SOURCE_SCAN_5_0_0_0.raw");
 	std::ifstream infile(inFilename);
 
 	size_t DHCount = 0;
@@ -426,27 +428,47 @@ int main(int argc, char* argv[]) {
 	}
 	//outFile->cd();
 	auto c1 = std::unique_ptr<TCanvas>(new TCanvas());
+
 	clusterQHist->Draw();	
-	c1->SaveAs("clusterQ.pdf","pdf");
+	std::string clusterQName = "clusterQ_"+suffix+".pdf";
+	c1->SaveAs(clusterQName.c_str(),"pdf");
+
 	clusterToTHist->Draw();	
-	c1->SaveAs("clusterToT.pdf","pdf");
+	std::string clusterToTName = "clusterToT_"+suffix+".pdf";
+	c1->SaveAs(clusterToTName.c_str(),"pdf");
+
 	clusterToTHist1->Draw();	
-	c1->SaveAs("clusterToT_size1.pdf","pdf");
+	std::string clusterToTSize1 = "clusterToT_size1_"+suffix+".pdf";
+	c1->SaveAs(clusterToTSize1.c_str(),"pdf");
+
 	clusterToTHist2->Draw();	
-	c1->SaveAs("clusterToT_size2.pdf","pdf");
+	std::string clusterToTSize2 = "clusterToT_size2_"+suffix+".pdf";
+	c1->SaveAs(clusterToTSize2.c_str(),"pdf");
+
 	clusterToTHist3->Draw();	
-	c1->SaveAs("clusterToT_size3.pdf","pdf");
+	std::string clusterToTSize3 = "clusterToT_size3_"+suffix+".pdf";
+	c1->SaveAs(clusterToTSize3.c_str(),"pdf");
+
 	clusterToTHist4->Draw();	
-	c1->SaveAs("clusterToT_size4orLarger.pdf","pdf");
+	std::string clusterToTSize4 = "clusterToT_size4orlarger_"+suffix+".pdf";
+	c1->SaveAs(clusterToTSize4.c_str(),"pdf");
+
 	totHit->Draw();	
-	c1->SaveAs("totAllHit.pdf","pdf");
+	std::string totAllHit = "totAllHit_"+suffix+".pdf";
+	c1->SaveAs(totAllHit.c_str(),"pdf");
+
 	lvl1Hit->Draw();	
-	c1->SaveAs("lvl1AllHit.pdf","pdf");
+	std::string lvl1AllHit = "lvl1AllHit_"+suffix+".pdf";
+	c1->SaveAs(lvl1AllHit.c_str(),"pdf");
+
 	c1->SetLogy();
-	cluSize->Draw();	
-	c1->SaveAs("clusterSize.pdf","pdf");
+	cluSize->Draw();
+	std::string clusterSize = "clusterSize_"+suffix+".pdf";
+	c1->SaveAs(clusterSize.c_str(),"pdf");
+
 	noClu->Draw();	
-	c1->SaveAs("numberClusters.pdf","pdf");
+	std::string noClusters = "numberClusters_"+suffix+".pdf";
+	c1->SaveAs(noClusters.c_str(),"pdf");
 
 	outFile.Write();
 	outFile.Close();
