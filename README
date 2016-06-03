@@ -1,1 +1,1 @@
-To compile, do: g++ `root-config --cflags` main.cxx `root-config --libs` -o main
+To compile, do: g++ -std=c++11 `root-config --cflags` main.cxx `root-config --libs` -o main
