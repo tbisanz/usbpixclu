@@ -259,7 +259,7 @@ std::vector<hit> decodeHitsHitDisc2( std::vector<rawHit>& rawHits ) {
 	return std::move(result);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 
 	const std::string DH = "DH";
 	const std::string DR = "DR";
@@ -317,9 +317,12 @@ int main() {
  	
 	std::string cmd; 
 	std::string cmdDec; 
+	
+	std::string inFilename = std::string(argv[1]);
 
+	std::cout << inFilename << std::endl; 
 	//std::ifstream infile("quellenscan.21.04_SOURCE_SCAN_5_0_0_0.raw");
-	std::ifstream infile("source3_Source_Scan50_0_0_0.raw");
+	std::ifstream infile(inFilename);
 
 	size_t DHCount = 0;
 	size_t TRCount = 0;
