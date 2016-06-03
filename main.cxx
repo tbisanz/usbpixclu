@@ -13,6 +13,22 @@
 static const size_t FE_ROWS = 336;
 static const size_t FE_COLS = 80;
 
+std::vector<std::string> split(const std::string& str, const std::string& delim)
+{
+    std::vector<std::string> tokens;
+    size_t prev = 0, pos = 0;
+    do
+    {
+        pos = str.find(delim, prev);
+        if (pos == std::string::npos) pos = str.length();
+        std::string token = str.substr(prev, pos-prev);
+        if (!token.empty()) tokens.push_back(token);
+        prev = pos + delim.length();
+    }
+    while (pos < str.length() && prev < str.length());
+    return tokens;
+}
+
 /** The totDecoder class holds the calibration parameters for the 
  *  ToT to charge calibration. It is used as a (bad) static variable
  *  for the hit class. */
@@ -268,8 +284,10 @@ int main(int argc, char* argv[]) {
 
 	std::string inFilename = std::string(argv[1]);
 	
-	std::string suffix = inFilename;
+	std::string suffix = split(inFilename, "/").back();
 	suffix.resize(suffix.size()-4);
+
+	std::cout << "Output suffix: " << suffix << std::endl;
 
 	std::string outFileName = "out_"+suffix+".root";
 	TFile outFile(outFileName.c_str(), "RECREATE");
@@ -318,7 +336,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "HitDiscConf set to: " << _pHitDiscConf << std::endl;
 */	
-//	hit::setDecoder("par.root");
+	hit::setDecoder("par.root");
  	
 	std::string cmd; 
 	std::string cmdDec; 
