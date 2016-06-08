@@ -282,7 +282,12 @@ int main(int argc, char* argv[]) {
 	const std::string TD = "TD";
 	const std::string CHANNEL = "CHANNEL";
 
+	if( argc != 3)  {
+		std::cout << "Usage: ./main data_file par_file" << std::endl; 
+		return 0;
+	}
 	std::string inFilename = std::string(argv[1]);
+	std::string parFilename = std::string(argv[2]);
 	
 	std::string suffix = split(inFilename, "/").back();
 	suffix.resize(suffix.size()-4);
@@ -336,7 +341,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "HitDiscConf set to: " << _pHitDiscConf << std::endl;
 */	
-	hit::setDecoder("par.root");
+	hit::setDecoder(parFilename);
  	
 	std::string cmd; 
 	std::string cmdDec; 
